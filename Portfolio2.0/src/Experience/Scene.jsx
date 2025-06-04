@@ -1,5 +1,5 @@
 import React, {Suspense} from 'react'
-import Room from "./models/Room74-v1"
+import Room from "./models/RoomFinal2"
 
 function Scene() {
   return (
