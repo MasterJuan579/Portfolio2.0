@@ -1,20 +1,40 @@
 import React, {Suspense, useRef} from 'react'
-import Room from "./models/RoomFinal2"
+import * as THREE from 'three';
+import Room from "./models/RoomFinal3"
 import { useFrame } from '@react-three/fiber';
+import GridPlanes from './components/GridPlanes';
 
 const Scene = ({camera, pointerRef})=> {
 
-  const gruopRotationRef = useRef({})
+  const groupRef =  useRef();
+  const groupRotationRef = useRef(0);
+
   useFrame(()=>{
+    if (!groupRef.current) return;
     // console.log(camera.current.position)
     // console.log(camera.current.rotation)
 
-    const targetPosition = pointerRef.current.x * Math.PI * 0.5;
+    const targetPosition = pointerRef.current.x * Math.PI * 0.03;
 
+    groupRotationRef.current = THREE.MathUtils.lerp(
+      groupRotationRef.current,
+      targetPosition,
+      0.1
+    );
+
+    groupRef.current.rotation.y = groupRotationRef.current;
   });
   return (
     <Suspense>
-      <Room></Room>
+      <group ref={groupRef}>
+        <Room />
+        <GridPlanes 
+          rows={20}
+          columns={20} 
+          planeWidth ={5} 
+          planeDepth ={5} 
+          spacing={0}/>
+      </group>
     </Suspense>
   )
 }

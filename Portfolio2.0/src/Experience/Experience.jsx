@@ -10,8 +10,8 @@ const Experience = () => {
 
   useEffect(()=>{
     const onPointerMove = (e) =>{
-      pointerRef.x = (e.clientX / window.innerWidth) * 2 - 1;
-      pointerRef.y = (e.clientY / window.innerHeight) * 2 + 1;
+      pointerRef.current.x = (e.clientX / window.innerWidth) * 2 - 1;
+      pointerRef.current.y = -(e.clientY / window.innerHeight) * 2 + 1;
     };
 
     window.addEventListener("pointermove", onPointerMove)
@@ -27,9 +27,9 @@ const Experience = () => {
             makeDefault
             position={[4.075775525239354, 5.646120137743827, 4.873920735709626]}
             rotation={[-0.5279566569510294, 0.632068993864664, 0.33181045691321]}
-            zoom={63}
+            zoom={56}
           />
-          {/* <OrbitControls/> */}
+           {/* <OrbitControls/> */}
         <Scene camera={cameraRef} pointerRef={pointerRef}/>
     </Canvas>
   )

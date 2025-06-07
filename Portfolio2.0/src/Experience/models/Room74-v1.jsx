@@ -13,7 +13,7 @@ export default function Model(props) {
 
   return (
     <group {...props} dispose={null}>
-      <mesh geometry={nodes.Plane002.geometry} material={basicMaterials.AzulOscuro} />
+      <mesh geometry={nodes.Plane002.geometry} material={materials.AzulOscuro} position={[0, -0.14, 0]} />
       <mesh geometry={nodes.Wall.geometry} material={basicMaterials.AzulPared} position={[0, 2.5, 0]} />
       <group position={[-1.928, 2.032, -0.392]} rotation={[-Math.PI, 0.541, -Math.PI]}>
         <mesh geometry={nodes.Cube010.geometry} material={basicMaterials['Brown Fabric']} />
