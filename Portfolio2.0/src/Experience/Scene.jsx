@@ -14,7 +14,7 @@ const Scene = ({camera, pointerRef})=> {
     // console.log(camera.current.position)
     // console.log(camera.current.rotation)
 
-    const targetPosition = pointerRef.current.x * Math.PI * 0.03;
+    const targetPosition = pointerRef.current.x * Math.PI * 0.05;
 
     groupRotationRef.current = THREE.MathUtils.lerp(
       groupRotationRef.current,

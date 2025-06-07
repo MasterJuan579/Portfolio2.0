@@ -60,7 +60,7 @@ export default function Model(props) {
         <mesh geometry={nodes.Plane016_1.geometry} material={basicMaterials.NegroMonitor} />
       </group>
       <mesh geometry={nodes.BasePoster1.geometry} material={basicMaterials.NegroSilla} position={[-3.997, 3.305, 1.846]} rotation={[0, 0, -Math.PI / 2]} />
-      <mesh geometry={nodes.LuffyPoster.geometry} material={basicMaterials['Material.005']} position={[-3.359, 3.497, -3.988]} rotation={[Math.PI / 2, 0, 0]} />
+      <mesh geometry={nodes.LuffyPoster.geometry} material={materials['Material.005']} position={[-3.359, 3.497, -3.988]} rotation={[Math.PI / 2, 0, 0]} />
       <group position={[-3.997, 3.305, 1.846]} rotation={[0, 0, -Math.PI / 2]}>
         <mesh geometry={nodes.Plane001.geometry} material={materials.PosterDune} />
         <mesh geometry={nodes.Plane001_1.geometry} material={materials.PosterBastardos} />
