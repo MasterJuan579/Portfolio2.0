@@ -1,11 +1,12 @@
+// GridPlanes.jsx
 import { useFrame } from "@react-three/fiber";
-import React, { useMemo, useState, useRef } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 
 const Plane = ({ position, planeDepth, planeWidth }) => {
   const meshRef = useRef();
   const [hovered, setHovered] = useState(false);
-  const [opacity, setOpacity] = useState(0);
+  const opacityRef = useRef(0);
 
   const material = useMemo(() => {
     return new THREE.MeshStandardMaterial({
@@ -14,6 +15,7 @@ const Plane = ({ position, planeDepth, planeWidth }) => {
       emissiveIntensity: 0.8,
       transparent: true,
       opacity: 0,
+      depthWrite: false, // mejora transparencia visual
     });
   }, []);
 
@@ -21,11 +23,12 @@ const Plane = ({ position, planeDepth, planeWidth }) => {
     if (!meshRef.current) return;
 
     const targetOpacity = hovered ? 0.8 : 0;
-    const lerpfactor = hovered ? 0.1 : 0.03;
-    setOpacity(THREE.MathUtils.lerp(opacity, targetOpacity, lerpfactor));
-    meshRef.current.material.opacity = opacity;
+    const lerpFactor = hovered ? 0.1 : 0.03;
+    opacityRef.current = THREE.MathUtils.lerp(opacityRef.current, targetOpacity, lerpFactor);
+
+    meshRef.current.material.opacity = opacityRef.current;
     meshRef.current.material.emissiveIntensity = hovered ? 1.5 : 0.8;
-  })
+  });
 
   return (
     <mesh
@@ -33,19 +36,23 @@ const Plane = ({ position, planeDepth, planeWidth }) => {
       position={position}
       rotation={[-Math.PI / 2, 0, 0]}
       material={material}
-      onPointerMove={() =>{
-        setHovered(true)
-      }}
-      onPointerOut={() =>{
-        setHovered(false)
-      }}
+      onPointerMove={() => setHovered(true)}
+      onPointerOut={() => setHovered(false)}
     >
       <planeGeometry args={[planeDepth, planeWidth]} />
     </mesh>
   );
 };
 
-function GridPlanes({ rows, columns, planeWidth, planeDepth, spacing }) {
+function GridPlanes({
+  rows,
+  columns,
+  planeWidth,
+  planeDepth,
+  spacing,
+  position = [0, 0, 0],
+  ref = null,
+}) {
   const gridWidth = columns * (planeWidth + spacing) - spacing;
   const gridDepth = rows * (planeDepth + spacing) - spacing;
 
@@ -65,12 +72,16 @@ function GridPlanes({ rows, columns, planeWidth, planeDepth, spacing }) {
           planeDepth={planeDepth}
           planeWidth={planeWidth}
           position={[x, -0.1, z]}
-        ></Plane>
+        />
       );
     }
   }
 
-  return <group>{planes}</group>;
+  return (
+    <group position={position} ref={ref}>
+      {planes}
+    </group>
+  );
 }
 
 export default GridPlanes;

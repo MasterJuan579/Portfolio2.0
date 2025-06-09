@@ -27,7 +27,7 @@ const Experience = () => {
             makeDefault
             position={[4.075775525239354, 5.646120137743827, 4.873920735709626]}
             rotation={[-0.5279566569510294, 0.632068993864664, 0.33181045691321]}
-            zoom={56}
+            zoom={80}
           />
            {/* <OrbitControls/> */}
         <Scene camera={cameraRef} pointerRef={pointerRef}/>

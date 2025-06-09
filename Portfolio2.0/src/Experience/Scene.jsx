@@ -31,8 +31,8 @@ const Scene = ({camera, pointerRef})=> {
         <GridPlanes 
           rows={20}
           columns={20} 
-          planeWidth ={5} 
-          planeDepth ={5} 
+          planeWidth ={4} 
+          planeDepth ={4} 
           spacing={0}/>
       </group>
     </Suspense>

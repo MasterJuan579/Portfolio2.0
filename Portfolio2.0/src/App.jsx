@@ -1,10 +1,12 @@
-import './App.css'
-import Experience from './Experience/Experience'
+import "./App.css";
+import Experience from "./Experience/Experience";
 
 function App() {
-  return <>
-    <Experience/>
-  </>
+  return (
+    <>
+      <Experience />
+    </>
+  );
 }
 
-export default App
+export default App;
