@@ -6,3 +6,10 @@
   width: 100%;
   overflow: hidden;
 }
+
+/* Esto asegura que el canvas se adapte correctamente */
+canvas {
+  display: block;
+  width: 100vw;
+  height: 100vh;
+}
