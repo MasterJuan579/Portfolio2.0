@@ -4,6 +4,7 @@ import Experience from "./Experience/Experience";
 import LoadingScreen from "./Experience/components/LoadingScreen";
 import Curtain from "./Experience/components/Curtain";
 import Sidebar from "./Experience/components/Sidebar"; // 🆕 Importa el sidebar
+import HamburgerMenu from "./Experience/components/HamburgerMenu"; // 🆕 Importa el sidebar
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -19,9 +20,10 @@ function App() {
   };
 
   return (
-    <div className="relative">
+    <div className="relative h-screen w-screen">
       {/* Sidebar fijo a la izquierda */}
       <Sidebar />
+      <HamburgerMenu />
 
       {/* Contenido principal con espacio para el sidebar */}
       <main className="ml-20 h-screen w-full">

@@ -28,6 +28,7 @@ const Experience = () => {
         left: 0,
         width: '100vw',
         height: '100vh',
+        zIndex: 0,
       }}
     >
       <OrthographicCamera

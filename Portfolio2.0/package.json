@@ -14,6 +14,8 @@
     "@react-three/fiber": "^9.1.2",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
+    "react-icons": "^5.5.0",
+    "react-media-hook": "^0.5.1",
     "three": "^0.177.0"
   },
   "devDependencies": {
