@@ -3,6 +3,7 @@ import "./App.css";
 import Experience from "./Experience/Experience";
 import LoadingScreen from "./Experience/components/LoadingScreen";
 import Curtain from "./Experience/components/Curtain";
+import Sidebar from "./Experience/components/Sidebar"; // 🆕 Importa el sidebar
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -18,16 +19,21 @@ function App() {
   };
 
   return (
-    <>
-      {/* Siempre renderizamos Experience */}
-      <Experience />
+    <div className="relative">
+      {/* Sidebar fijo a la izquierda */}
+      <Sidebar />
 
-      {/* Primero carga pantalla */}
+      {/* Contenido principal con espacio para el sidebar */}
+      <main className="ml-20 h-screen w-full">
+        <Experience />
+      </main>
+
+      {/* Pantalla de carga inicial */}
       {isLoading && <LoadingScreen onFinish={handleLoadingFinish} />}
 
-      {/* Luego aparece la cortina encima */}
+      {/* Animación de cortina */}
       {showCurtain && <Curtain onFinish={handleCurtainFinish} />}
-    </>
+    </div>
   );
 }
 
