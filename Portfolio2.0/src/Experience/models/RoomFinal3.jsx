@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useGLTF } from '@react-three/drei';
 import { convertirMaterialesABasic } from '../utils/ConvertToBasic';
 
 export default function Model(props) {
   const { nodes, materials } = useGLTF('/models/RoomFinal3.glb');
-  const basicMaterials = convertirMaterialesABasic(materials);
+  // Sin useMemo esto recrea los 51 materiales en cada render sin liberar los anteriores.
+  const basicMaterials = useMemo(() => convertirMaterialesABasic(materials), [materials]);
 
   return (
     <group {...props} dispose={null}>
@@ -53,6 +54,8 @@ export default function Model(props) {
           <mesh geometry={nodes.Cube017_1.geometry} material={basicMaterials.DarkBlueWindow} />
         </group>
 
+        {/* Estos usan el material original a proposito: su color base es negro y toda
+            la imagen vive en la emissiveTexture, que la conversion a basic no copia. */}
         <mesh geometry={nodes.Screen.geometry} material={materials.FondoMonitor} position={[3.072, 2.917, -2.255]} rotation={[0, 0.39, -Math.PI / 2]} />
         <mesh geometry={nodes.Base.geometry} material={basicMaterials.NegroMonitor} position={[3.072, 2.917, -2.255]} rotation={[0, 0.39, -Math.PI / 2]} />
 
