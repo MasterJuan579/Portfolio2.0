@@ -8,9 +8,15 @@
   line-height: 1.5;
   font-weight: 400;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: rgba(10,19,45,255);
+  /* Duracion del fade de colores al cambiar de tema. Igual a
+     THEME_SWITCH_DURATION en config/theme.js. */
+  --theme-fade: 1.6s;
+
+  color: var(--text);
+  background-color: var(--page-bg);
+  transition:
+    background-color var(--theme-fade) ease,
+    color var(--theme-fade) ease;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -18,3 +24,36 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* --page-bg es el color del vacio sobre el que flota el cuarto. El canvas es
+   transparente, asi que este es el fondo que se ve al alejar la camara, y
+   SectionOverlay.css lo reutiliza. Tiene que empatar con la base del modelo
+   de cada tema: si no, al alejarse aparece una costura recta. */
+:root,
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  /* Color medido en la textura horneada de la base (RoomDarkmode1). */
+  --page-bg: #080c14;
+  --text: rgba(255, 255, 255, 0.87);
+  --text-muted: rgba(255, 255, 255, 0.65);
+  --accent: #22d3ee;
+  --surface: rgba(0, 0, 0, 0.5);
+  --border: rgba(255, 255, 255, 0.2);
+  /* Pantalla de carga y cortina de bienvenida. */
+  --intro-bg: #0e0e0e;
+  --intro-fg: #ffffff;
+}
+
+/* Modo claro: paleta calida de atardecer, como la iluminacion del modelo. */
+:root[data-theme="light"] {
+  color-scheme: light;
+  /* Color medido en la textura horneada de la base (RoomLightmode1). */
+  --page-bg: #e8e1d8;
+  --text: #2b1d14;
+  --text-muted: rgba(43, 29, 20, 0.72);
+  --accent: #ea580c;
+  --surface: rgba(255, 250, 244, 0.65);
+  --border: rgba(43, 29, 20, 0.2);
+  /* Blanco calido con letras casi negras, de la misma familia que la paleta. */
+  --intro-bg: #fbf8f3;
+  --intro-fg: #1f1611;
+}
