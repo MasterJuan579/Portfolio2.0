@@ -5,6 +5,16 @@
     <link rel="icon" type="image/png" href="/JPICON5.PNG" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Juan Pablo| JP</title>
+    <script>
+      // Aplica el tema guardado antes del primer pintado para que no haya un
+      // destello de colores del tema equivocado mientras carga React.
+      try {
+        var t = localStorage.getItem('jp-theme');
+        document.documentElement.dataset.theme = t === 'light' ? 'light' : 'dark';
+      } catch (e) {
+        document.documentElement.dataset.theme = 'dark';
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>

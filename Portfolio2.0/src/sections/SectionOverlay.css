@@ -1,0 +1,93 @@
+.section-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  display: flex;
+}
+
+/* Mismo color que :root en index.css. Que coincidan es lo que hace que el
+   cuarto parezca irse de verdad en vez de quedar tapado por una cortina. */
+.section-overlay__backdrop {
+  position: absolute;
+  inset: 0;
+  background: var(--page-bg);
+  opacity: 0;
+  transition: background-color var(--theme-fade) ease;
+}
+
+.section-overlay__gate {
+  position: relative;
+  flex: 1;
+  opacity: 0;
+  overflow-y: auto;
+}
+
+/* Se usan animaciones y no transiciones a proposito: el overlay se monta con la
+   clase is-entering ya puesta, y una transicion necesita un valor previo desde
+   el cual salir. Con transition la opacidad saltaba a 1 al instante y tapaba
+   todo el giro. Una animacion si corre al montar. */
+@keyframes overlay-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes overlay-fade-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes section-content-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Entrando (fase 'leaving'): el 3D gira y se aleja durante 1.8s hasta colapsar
+   a un punto, asi que a los ~1.2s la pantalla ya es practicamente el fondo de
+   la pagina. El fondo del overlay solo entra al final, para matar la mota
+   brillante que dejan los materiales emisivos (monitor, laptop, lampara) al
+   reducirse a unos pocos pixeles encendidos. Todo cierra en TRANSITION_DURATION. */
+.section-overlay.is-entering .section-overlay__backdrop {
+  animation: overlay-fade-in 0.6s ease 1.2s both;
+}
+
+.section-overlay.is-entering .section-overlay__gate {
+  animation: overlay-fade-in 0.45s ease 1.35s both;
+}
+
+/* El contenido entra junto con su contenedor, no al montar. */
+.section-overlay.is-entering .section-overlay__content {
+  animation-delay: 1.35s;
+}
+
+.section-overlay.is-visible .section-overlay__backdrop,
+.section-overlay.is-visible .section-overlay__gate {
+  opacity: 1;
+}
+
+/* Saliendo (fase 'returning'): el fondo se quita temprano para que el
+   acercamiento del cuarto se vea casi entero. */
+.section-overlay.is-exiting .section-overlay__gate {
+  animation: overlay-fade-out 0.3s ease both;
+}
+
+.section-overlay.is-exiting .section-overlay__backdrop {
+  animation: overlay-fade-out 0.4s ease 0.25s both;
+}
+
+/* Se reproduce en cada montaje. Con la key por seccion, esto es el crossfade
+   barato de seccion a seccion, sin tocar el 3D. */
+.section-overlay__content {
+  animation: section-content-in 0.35s ease both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .section-overlay__content {
+    animation: none;
+  }
+}

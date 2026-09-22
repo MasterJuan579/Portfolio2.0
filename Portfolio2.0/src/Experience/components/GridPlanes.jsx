@@ -3,15 +3,25 @@ import { useFrame } from "@react-three/fiber";
 import React, { useLayoutEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
 
-// Intensidad maxima del brillo. Con AdditiveBlending sobre el fondo azul oscuro,
-// negro = invisible y blanco = brillo completo, asi que el color por instancia
-// hace el trabajo que antes hacia la opacidad de cada material.
-const MAX_GLOW = 0.8;
+// Dos modos con el mismo mecanismo de intensidad por instancia:
+// - glow (modo oscuro): AdditiveBlending, suma blanco al piso. Intensidad 0 no
+//   suma nada, asi que el plano en reposo es invisible.
+// - shadow (modo claro): SubtractiveBlending, que three resuelve como
+//   destino * (1 - color), asi que oscurece el piso hacia negro. Intensidad 0
+//   lo deja igual.
+const MODES = {
+  glow: { blending: THREE.AdditiveBlending, max: 0.8 },
+  shadow: { blending: THREE.SubtractiveBlending, max: 0.9 },
+};
 const FADE_IN = 0.1;
 const FADE_OUT = 0.03;
 // Debajo de este valor el plano ya no se distingue del fondo y sale de la
 // lista de activos, para que el bucle por frame quede vacio cuando nadie pasa el mouse.
 const EPSILON = 0.002;
+// Justo encima de la base del cuarto (Plane.002 queda en -0.14 * 0.7 = -0.098).
+// Si el grid queda debajo, el raycast lo sigue encontrando pero la base lo tapa
+// al dibujar y el hover no se ve.
+const GRID_HEIGHT = -0.09;
 
 // Objetos de trabajo reutilizados: crearlos dentro del bucle generaria basura cada frame.
 const scratchMatrix = new THREE.Matrix4();
@@ -27,7 +37,9 @@ function GridPlanes({
   planeDepth,
   spacing,
   position = [0, 0, 0],
+  mode = "glow",
 }) {
+  const { blending, max: maxIntensity } = MODES[mode];
   const meshRef = useRef();
   const count = rows * columns;
 
@@ -54,7 +66,7 @@ function GridPlanes({
       for (let column = 0; column < columns; column++) {
         scratchPosition.set(
           startX + column * (planeWidth + spacing),
-          -0.1,
+          GRID_HEIGHT,
           startZ + row * (planeDepth + spacing)
         );
         scratchMatrix.compose(scratchPosition, scratchQuaternion, scratchScale);
@@ -96,7 +108,7 @@ function GridPlanes({
         active.delete(index);
       } else {
         intensities[index] = value;
-        scratchColor.setScalar(value * MAX_GLOW);
+        scratchColor.setScalar(value * maxIntensity);
       }
 
       mesh.setColorAt(index, scratchColor);
@@ -117,6 +129,13 @@ function GridPlanes({
     hoveredRef.current = -1;
   };
 
+  // Con el dedo no existe un 'hover' que siga despues de soltar: al levantarlo
+  // el cuadro se desvanece. No se deja en manos del pointerleave, que cada
+  // navegador dispara distinto para punteros tactiles.
+  const handlePointerRelease = (event) => {
+    if (event.pointerType !== "mouse") handlePointerOut();
+  };
+
   return (
     <instancedMesh
       key={count}
@@ -124,6 +143,10 @@ function GridPlanes({
       args={[undefined, undefined, count]}
       position={position}
       onPointerMove={handlePointerMove}
+      // En pantallas tactiles un toque sin arrastrar tambien ilumina el cuadro.
+      onPointerDown={handlePointerMove}
+      onPointerUp={handlePointerRelease}
+      onPointerCancel={handlePointerRelease}
       onPointerOut={handlePointerOut}
     >
       <planeGeometry args={[planeDepth, planeWidth]} />
@@ -131,7 +154,7 @@ function GridPlanes({
         color="white"
         transparent
         depthWrite={false}
-        blending={THREE.AdditiveBlending}
+        blending={blending}
       />
     </instancedMesh>
   );
